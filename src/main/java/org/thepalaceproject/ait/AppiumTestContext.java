@@ -53,6 +53,11 @@ public final class AppiumTestContext implements AutoCloseable
     return new AppiumTestContext(resources, driver);
   }
 
+  public AndroidDriver driver()
+  {
+    return this.driver;
+  }
+
   @Override
   public void close()
     throws Exception

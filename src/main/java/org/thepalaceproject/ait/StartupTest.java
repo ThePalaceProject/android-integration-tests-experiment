@@ -28,6 +28,6 @@ public final class StartupTest
   @Test
   void testHelloWorld()
   {
-
+    SplashScreen.waitForAndCompleteSplashScreen(this.context);
   }
 }
