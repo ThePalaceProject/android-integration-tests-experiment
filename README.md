@@ -5,7 +5,7 @@ android-integration-tests
 
 ### APK
 
-Place the application to be tested under at `./app.apk`.
+Place the application to be tested at `./app.apk`.
 
 ### ADB
 
