@@ -1,30 +1,33 @@
 package org.thepalaceproject.ait;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public final class StartupTest
 {
-  private static AppiumTestContext context;
+  private AppiumTestContext context;
 
-  @BeforeAll
-  static void setUp()
+  @BeforeEach
+  public void setUp()
     throws Exception
   {
-    context = AppiumTestContext.create();
+    this.context = AppiumTestContext.create();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws Exception
+  {
+    this.context.close();
   }
 
   @Test
   void testHelloWorld()
   {
 
-  }
-
-  @AfterAll
-  static void tearDown()
-    throws Exception
-  {
-    context.close();
   }
 }
