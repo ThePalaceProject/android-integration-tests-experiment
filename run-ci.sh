@@ -32,6 +32,6 @@ rm -rfv .credentials
 
 info "Checking Android SDK..."
 export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
-adb --help
+adb --help 1>/dev/null
 
 ./run.sh
