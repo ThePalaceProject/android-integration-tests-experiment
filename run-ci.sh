@@ -13,7 +13,7 @@ then
   fatal "CI_GITHUB_ACCESS_TOKEN is not defined"
 fi
 
-git clone "https://${CI_GITHUB_ACCESS_TOKEN}:github.com/ThePalaceProject/mobile-certificates" .credentials
+git clone "https://${CI_GITHUB_ACCESS_TOKEN}@github.com/ThePalaceProject/mobile-certificates" .credentials
 cp .credentials/BrowserStack/PalaceAndroidTests/browserstack.yml .
 rm -rfv .credentials
 
