@@ -2,17 +2,15 @@ package org.thepalaceproject.ait;
 
 import com.io7m.jmulticlose.core.CloseableCollection;
 import com.io7m.jmulticlose.core.CloseableCollectionType;
-import com.io7m.jmulticlose.core.ClosingResourceFailedException;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
+import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public final class AppiumTestContext implements AutoCloseable
@@ -29,6 +27,13 @@ public final class AppiumTestContext implements AutoCloseable
   {
     this.resources = resources;
     this.driver = driver;
+  }
+
+  public static AppiumTestContext createForTestInfo(
+    final TestInfo testInfo)
+    throws Exception
+  {
+    return create(AppiumTestContext.createTestName(testInfo));
   }
 
   public static AppiumTestContext create(
@@ -82,7 +87,9 @@ public final class AppiumTestContext implements AutoCloseable
       caps.setCapability("platformName", "Android");
       caps.setCapability("bstack:options", browserstackOptions);
 
-      driver = new AndroidDriver(new URL("https://hub.browserstack.com/wd/hub"), caps);
+      driver = new AndroidDriver(
+        new URL("https://hub.browserstack.com/wd/hub"),
+        caps);
       LOG.debug("Opened Android driver.");
       resources.add(driver::quit);
     } catch (final Throwable e) {
@@ -121,6 +128,20 @@ public final class AppiumTestContext implements AutoCloseable
 
     LOG.debug("Created Appium context.");
     return new AppiumTestContext(resources, driver);
+  }
+
+  private static String createTestName(
+    final TestInfo testInfo)
+  {
+    final var text = new StringBuilder();
+    final var testClass = testInfo.getTestClass();
+    if (testClass.isPresent()) {
+      text.append(testClass.get().getSimpleName());
+      text.append('.');
+    }
+
+    text.append(testInfo.getDisplayName());
+    return text.toString();
   }
 
   public AndroidDriver driver()

@@ -17,7 +17,7 @@ public final class StartupTest
     final TestInfo testInfo)
     throws Exception
   {
-    this.context = AppiumTestContext.create(testInfo.getDisplayName());
+    this.context = AppiumTestContext.createForTestInfo(testInfo);
   }
 
   @AfterEach
