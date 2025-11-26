@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class AppiumTestContext implements AutoCloseable
 {
@@ -56,22 +57,19 @@ public final class AppiumTestContext implements AutoCloseable
     try {
       LOG.debug("Opening Android driver...");
 
+      final var username =
+        System.getenv("PALACE_BROWSERSTACK_USERNAME");
+      final var accessKey =
+        System.getenv("PALACE_BROWSERSTACK_ACCESS_KEY");
+
+      Objects.requireNonNull(username, "PALACE_BROWSERSTACK_USERNAME");
+      Objects.requireNonNull(accessKey, "PALACE_BROWSERSTACK_ACCESS_KEY");
+
       final var caps = new DesiredCapabilities();
-      caps.setCapability("platformName", "Android");
+      caps.setCapability("browserstack.user", username);
+      caps.setCapability("browserstack.key", accessKey);
       caps.setCapability("app", appId);
-      caps.setCapability("automationName", "UIAutomator2");
 
-      final var bstackOpts = new HashMap<>();
-      bstackOpts.put("deviceName", "Google Pixel 7");
-      bstackOpts.put("osVersion", "13.0");
-      bstackOpts.put("projectName", "PalaceIntegrationTests");
-      bstackOpts.put("buildName", "Build XYZ");
-      bstackOpts.put("sessionName", "My test run");
-      bstackOpts.put("appiumVersion", "2.19.0");
-      bstackOpts.put("debug", true);
-      bstackOpts.put("video", true);
-
-      caps.setCapability("bstack:options", bstackOpts);
       driver = new AndroidDriver(new URL("https://hub.browserstack.com/wd/hub"), caps);
       LOG.debug("Opened Android driver.");
       resources.add(driver::quit);

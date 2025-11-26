@@ -41,11 +41,11 @@ APK_FILE=$(realpath app.apk)
 #
 
 info "Uploading APK to BrowserStack"
-BROWSERSTACK_USERNAME=$(yq -r .userName < browserstack.yml)
-BROWSERSTACK_ACCESS_KEY=$(yq -r .accessKey < browserstack.yml)
+export PALACE_BROWSERSTACK_USERNAME=$(yq -r .userName < browserstack.yml)
+export PALACE_BROWSERSTACK_ACCESS_KEY=$(yq -r .accessKey < browserstack.yml)
 
 curl \
-  -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+  -u "$PALACE_BROWSERSTACK_USERNAME:$PALACE_BROWSERSTACK_ACCESS_KEY" \
   -o app.json \
   -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
   -F "file=@${APK_FILE}"
