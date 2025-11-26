@@ -34,4 +34,12 @@ info "Checking Android SDK..."
 export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
 adb --help 1>/dev/null
 
+#----------------------------------------------------------------------
+# Fetch the latest APK.
+#
+
+git clone --depth 1 https://github.com/ThePalaceProject/android-binaries
+cp android-binaries/palace-debug.apk app.apk
+rm -rfv android-binaries
+
 ./run.sh
