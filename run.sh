@@ -19,7 +19,7 @@ run_cleanup()
 info "Setting up ADB"
 ./adb-run.sh
 
-if [ ! -f "app.apk" ]
+if [ -f "app.apk" ]
 then
   info "app.apk exists"
 else
