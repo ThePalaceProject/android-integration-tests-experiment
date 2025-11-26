@@ -31,7 +31,8 @@ public final class AppiumTestContext implements AutoCloseable
     this.driver = driver;
   }
 
-  public static AppiumTestContext create()
+  public static AppiumTestContext create(
+    final String testName)
     throws Exception
   {
     LOG.debug("Setting up Appium context...");
@@ -39,13 +40,13 @@ public final class AppiumTestContext implements AutoCloseable
     final var browserstackAppId =
       System.getenv("PALACE_BROWSERSTACK_APP_URL");
     if (browserstackAppId != null) {
-      return createForBrowserstack(browserstackAppId);
+      return createForBrowserstack(testName, browserstackAppId);
     }
-
-    return createForLocal();
+    return createForLocal(testName);
   }
 
   private static AppiumTestContext createForBrowserstack(
+    final String testName,
     final String appId)
     throws Exception
   {
@@ -78,6 +79,7 @@ public final class AppiumTestContext implements AutoCloseable
       caps.setCapability("appium:os_version", "12.0");
       caps.setCapability("appium:app", appId);
       caps.setCapability("platformName", "Android");
+      caps.setCapability("name", testName);
       caps.setCapability("bstack:options", browserstackOptions);
 
       driver = new AndroidDriver(new URL("https://hub.browserstack.com/wd/hub"), caps);
@@ -92,8 +94,9 @@ public final class AppiumTestContext implements AutoCloseable
     return new AppiumTestContext(resources, driver);
   }
 
-  private static AppiumTestContext createForLocal()
-    throws ClosingResourceFailedException, MalformedURLException
+  private static AppiumTestContext createForLocal(
+    final String testName)
+    throws Exception
   {
     final var resources =
       CloseableCollection.create();
