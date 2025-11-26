@@ -30,14 +30,19 @@ public final class AppiumTestContext implements AutoCloseable
   }
 
   public static AppiumTestContext createForTestInfo(
-    final TestInfo testInfo)
+    final TestInfo testInfo,
+    final AppiumDeviceConfiguration deviceConfiguration)
     throws Exception
   {
-    return create(AppiumTestContext.createTestName(testInfo));
+    return create(
+      AppiumTestContext.createTestName(testInfo),
+      deviceConfiguration
+    );
   }
 
   public static AppiumTestContext create(
-    final String testName)
+    final String testName,
+    final AppiumDeviceConfiguration deviceConfiguration)
     throws Exception
   {
     LOG.debug("Setting up Appium context...");
@@ -45,14 +50,19 @@ public final class AppiumTestContext implements AutoCloseable
     final var browserstackAppId =
       System.getenv("PALACE_BROWSERSTACK_APP_URL");
     if (browserstackAppId != null) {
-      return createForBrowserstack(testName, browserstackAppId);
+      return createForBrowserstack(
+        testName,
+        browserstackAppId,
+        deviceConfiguration
+      );
     }
     return createForLocal(testName);
   }
 
   private static AppiumTestContext createForBrowserstack(
     final String testName,
-    final String appId)
+    final String appId,
+    final AppiumDeviceConfiguration deviceConfiguration)
     throws Exception
   {
     final var resources =
@@ -81,8 +91,8 @@ public final class AppiumTestContext implements AutoCloseable
       browserstackOptions.put("sessionName", testName);
 
       final var caps = new DesiredCapabilities();
-      caps.setCapability("appium:deviceName", "Samsung Galaxy S22");
-      caps.setCapability("appium:os_version", "12.0");
+      caps.setCapability("appium:deviceName", deviceConfiguration.deviceName());
+      caps.setCapability("appium:os_version", deviceConfiguration.osVersion());
       caps.setCapability("appium:app", appId);
       caps.setCapability("platformName", "Android");
       caps.setCapability("bstack:options", browserstackOptions);
