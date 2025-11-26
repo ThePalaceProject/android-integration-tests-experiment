@@ -6,7 +6,9 @@ fatal()
   exit 1
 }
 
-echo "CI_GITHUB_ACCESS_TOKEN: ${CI_GITHUB_ACCESS_TOKEN}"
+#----------------------------------------------------------------------
+# Clone the credentials to extract the browserstack configuration.
+#
 
 if [ -z "${CI_GITHUB_ACCESS_TOKEN}" ]
 then
@@ -16,5 +18,12 @@ fi
 git clone "https://${CI_GITHUB_ACCESS_TOKEN}@github.com/ThePalaceProject/mobile-certificates" .credentials
 cp .credentials/BrowserStack/PalaceAndroidTests/browserstack.yml .
 rm -rfv .credentials
+
+#----------------------------------------------------------------------
+# Ensure we have a working Android adb.
+#
+
+export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
+adb --help
 
 ./run.sh
