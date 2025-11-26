@@ -65,10 +65,17 @@ public final class AppiumTestContext implements AutoCloseable
       Objects.requireNonNull(username, "PALACE_BROWSERSTACK_USERNAME");
       Objects.requireNonNull(accessKey, "PALACE_BROWSERSTACK_ACCESS_KEY");
 
+      final var browserstackOptions = new HashMap<String, Object>();
+      browserstackOptions.put("userName", username);
+      browserstackOptions.put("accessKey", accessKey);
+      browserstackOptions.put("buildName", appId.replace("bs:/", ""));
+
       final var caps = new DesiredCapabilities();
-      caps.setCapability("browserstack.user", username);
-      caps.setCapability("browserstack.key", accessKey);
-      caps.setCapability("app", appId);
+      caps.setCapability("appium:deviceName", "Samsung Galaxy S22");
+      caps.setCapability("appium:os_version", "12.0");
+      caps.setCapability("appium:app", appId);
+      caps.setCapability("platformName", "Android");
+      caps.setCapability("bstack:options", browserstackOptions);
 
       driver = new AndroidDriver(new URL("https://hub.browserstack.com/wd/hub"), caps);
       LOG.debug("Opened Android driver.");
