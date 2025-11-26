@@ -33,6 +33,10 @@ rm -rfv .credentials
 info "Fetching latest APK"
 git clone --depth 1 https://github.com/ThePalaceProject/android-binaries
 cp android-binaries/palace-debug.apk app.apk
+
+info "Fetching git commit"
+export PALACE_GIT_COMMIT="$(git --git-dir=android-binaries/.git log -1 --pretty=%B | grep '^Git commit: ' | awk '{print $NF}')"
+
 rm -rfv android-binaries
 APK_FILE=$(realpath app.apk)
 
@@ -57,4 +61,4 @@ export PALACE_BROWSERSTACK_APP_URL=$(jq -r .app_url < app.json)
 #
 
 info "Running test suite."
-mvn clean package
+mvn -B -q clean package

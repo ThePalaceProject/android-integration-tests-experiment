@@ -61,14 +61,17 @@ public final class AppiumTestContext implements AutoCloseable
         System.getenv("PALACE_BROWSERSTACK_USERNAME");
       final var accessKey =
         System.getenv("PALACE_BROWSERSTACK_ACCESS_KEY");
+      final var gitCommit =
+        System.getenv("PALACE_GIT_COMMIT");
 
       Objects.requireNonNull(username, "PALACE_BROWSERSTACK_USERNAME");
       Objects.requireNonNull(accessKey, "PALACE_BROWSERSTACK_ACCESS_KEY");
+      Objects.requireNonNull(gitCommit, "PALACE_GIT_COMMIT");
 
       final var browserstackOptions = new HashMap<String, Object>();
       browserstackOptions.put("userName", username);
       browserstackOptions.put("accessKey", accessKey);
-      browserstackOptions.put("buildName", appId.replace("bs:/", ""));
+      browserstackOptions.put("buildName", gitCommit);
 
       final var caps = new DesiredCapabilities();
       caps.setCapability("appium:deviceName", "Samsung Galaxy S22");
