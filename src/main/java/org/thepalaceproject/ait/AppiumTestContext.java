@@ -2,11 +2,14 @@ package org.thepalaceproject.ait;
 
 import com.io7m.jmulticlose.core.CloseableCollection;
 import com.io7m.jmulticlose.core.CloseableCollectionType;
+import com.io7m.jmulticlose.core.ClosingResourceFailedException;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public final class AppiumTestContext implements AutoCloseable
@@ -30,7 +33,53 @@ public final class AppiumTestContext implements AutoCloseable
   {
     LOG.debug("Setting up Appium context...");
 
-    final var resources = CloseableCollection.create();
+    final var browserstackAppId =
+      System.getenv("PALACE_BROWSERSTACK_APP_URL");
+    if (browserstackAppId != null) {
+      return createForBrowserstack(browserstackAppId);
+    }
+
+    return createForLocal();
+  }
+
+  private static AppiumTestContext createForBrowserstack(
+    final String appId)
+    throws Exception
+  {
+    final var resources =
+      CloseableCollection.create();
+
+    final AndroidDriver driver;
+
+    try {
+      LOG.debug("Opening Android driver...");
+
+      final var caps = new DesiredCapabilities();
+      caps.setCapability("platformName", "android");
+      caps.setCapability("deviceName", "Google Pixel 7");
+      caps.setCapability("platformVersion", "13.0");
+      caps.setCapability("app", appId);
+      caps.setCapability("browserstack.debug", true);
+      caps.setCapability("browserstack.video", true);
+
+      driver = new AndroidDriver(new URL("https://hub.browserstack.com/wd/hub"), caps);
+      LOG.debug("Opened Android driver.");
+      resources.add(driver::quit);
+    } catch (final Throwable e) {
+      resources.close();
+      throw e;
+    }
+
+    LOG.debug("Created Appium context.");
+    return new AppiumTestContext(resources, driver);
+  }
+
+  private static AppiumTestContext createForLocal()
+    throws ClosingResourceFailedException, MalformedURLException
+  {
+    final var resources =
+      CloseableCollection.create();
+
     final AndroidDriver driver;
 
     try {

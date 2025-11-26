@@ -1,5 +1,6 @@
-.idea
-.credentials
-browserstack.yml
-target
 app.apk
+app.json
+browserstack.yml
+.credentials
+.idea
+target

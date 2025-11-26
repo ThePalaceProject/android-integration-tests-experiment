@@ -27,19 +27,34 @@ cp .credentials/BrowserStack/PalaceAndroidTests/browserstack.yml .
 rm -rfv .credentials
 
 #----------------------------------------------------------------------
-# Ensure we have a working Android adb.
-#
-
-info "Checking Android SDK..."
-export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
-adb --help 1>/dev/null
-
-#----------------------------------------------------------------------
 # Fetch the latest APK.
 #
 
+info "Fetching latest APK"
 git clone --depth 1 https://github.com/ThePalaceProject/android-binaries
 cp android-binaries/palace-debug.apk app.apk
 rm -rfv android-binaries
+APK_FILE=$(realpath app.apk)
 
-./run.sh
+#----------------------------------------------------------------------
+# Upload the APK to browser stack.
+#
+
+info "Uploading APK to BrowserStack"
+BROWSERSTACK_USERNAME=$(yq -r .userName < browserstack.yml)
+BROWSERSTACK_ACCESS_KEY=$(yq -r .accessKey < browserstack.yml)
+
+curl \
+  -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+  -o app.json \
+  -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
+  -F "file=@${APK_FILE}"
+
+export PALACE_BROWSERSTACK_APP_URL=$(jq -r .app_url < app.json)
+
+#----------------------------------------------------------------------
+# Run the test suite.
+#
+
+info "Running test suite."
+mvn clean package
