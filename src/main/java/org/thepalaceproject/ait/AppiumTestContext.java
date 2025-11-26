@@ -31,18 +31,18 @@ public final class AppiumTestContext implements AutoCloseable
 
   public static AppiumTestContext createForTestInfo(
     final TestInfo testInfo,
-    final AppiumDeviceConfiguration deviceConfiguration)
+    final AppiumDeviceConfiguration device)
     throws Exception
   {
     return create(
-      AppiumTestContext.createTestName(testInfo),
-      deviceConfiguration
+      AppiumTestContext.createTestName(testInfo, device),
+      device
     );
   }
 
   public static AppiumTestContext create(
     final String testName,
-    final AppiumDeviceConfiguration deviceConfiguration)
+    final AppiumDeviceConfiguration device)
     throws Exception
   {
     LOG.debug("Setting up Appium context...");
@@ -50,11 +50,7 @@ public final class AppiumTestContext implements AutoCloseable
     final var browserstackAppId =
       System.getenv("PALACE_BROWSERSTACK_APP_URL");
     if (browserstackAppId != null) {
-      return createForBrowserstack(
-        testName,
-        browserstackAppId,
-        deviceConfiguration
-      );
+      return createForBrowserstack(testName, browserstackAppId, device);
     }
     return createForLocal(testName);
   }
@@ -141,16 +137,27 @@ public final class AppiumTestContext implements AutoCloseable
   }
 
   private static String createTestName(
-    final TestInfo testInfo)
+    final TestInfo testInfo,
+    final AppiumDeviceConfiguration device)
   {
     final var text = new StringBuilder();
-    final var testClass = testInfo.getTestClass();
-    if (testClass.isPresent()) {
-      text.append(testClass.get().getSimpleName());
-      text.append('.');
-    }
 
-    text.append(testInfo.getDisplayName());
+    testInfo.getTestClass()
+      .ifPresent(clazz -> {
+        text.append(clazz.getSimpleName());
+        text.append(':');
+      });
+    testInfo.getTestMethod()
+      .ifPresent(method -> {
+        text.append(method.getName());
+        text.append(' ');
+      });
+
+    text.append('(');
+    text.append(device.deviceName());
+    text.append(" ");
+    text.append(device.osVersion());
+    text.append(')');
     return text.toString();
   }
 
