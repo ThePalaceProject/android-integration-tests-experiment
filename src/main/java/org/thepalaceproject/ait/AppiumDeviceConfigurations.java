@@ -27,15 +27,15 @@ public final class AppiumDeviceConfigurations
         "13.0"
       ),
       new AppiumDeviceConfiguration(
-        "Pixel 9",
+        "Google Pixel 9",
         "16.0"
       ),
       new AppiumDeviceConfiguration(
-        "Moto G9 Play",
+        "Motorola Moto G9 Play",
         "10.0"
       ),
       new AppiumDeviceConfiguration(
-        "Galaxy Tab S11",
+        "Samsung Galaxy Tab S11",
         "16.0"
       )
     );
