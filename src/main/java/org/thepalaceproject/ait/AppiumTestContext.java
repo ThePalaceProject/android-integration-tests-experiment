@@ -73,7 +73,7 @@ public final class AppiumTestContext implements AutoCloseable
       browserstackOptions.put("userName", username);
       browserstackOptions.put("accessKey", accessKey);
       browserstackOptions.put("buildName", gitCommit);
-      browserstackOptions.put("name", testName);
+      browserstackOptions.put("sessionName", testName);
 
       final var caps = new DesiredCapabilities();
       caps.setCapability("appium:deviceName", "Samsung Galaxy S22");
