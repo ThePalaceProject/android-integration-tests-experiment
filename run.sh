@@ -39,7 +39,7 @@ do
     break
   else
     info "Appium status is currently: ${CONTAINER_STATUS}"
-    sleep 1
+    sleep 5
   fi
 done
 
