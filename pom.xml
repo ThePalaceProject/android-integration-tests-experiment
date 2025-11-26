@@ -34,6 +34,23 @@
     <io.appium.version>10.0.0</io.appium.version>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>getClasspathFilenames</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
