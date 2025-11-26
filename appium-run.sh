@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 IMAGE="docker.io/appium/appium:v3.1.1-p0"
 APPLICATION_APK="$(realpath app.apk)"
