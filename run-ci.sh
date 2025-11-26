@@ -6,6 +6,8 @@ fatal()
   exit 1
 }
 
+echo "CI_GITHUB_ACCESS_TOKEN: ${CI_GITHUB_ACCESS_TOKEN}"
+
 if [ -z "${CI_GITHUB_ACCESS_TOKEN}" ]
 then
   fatal "CI_GITHUB_ACCESS_TOKEN is not defined"
