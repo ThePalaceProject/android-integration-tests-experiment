@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class AppiumTestContext implements AutoCloseable
 {
@@ -55,13 +57,21 @@ public final class AppiumTestContext implements AutoCloseable
       LOG.debug("Opening Android driver...");
 
       final var caps = new DesiredCapabilities();
-      caps.setCapability("platformName", "android");
-      caps.setCapability("deviceName", "Google Pixel 7");
-      caps.setCapability("platformVersion", "13.0");
+      caps.setCapability("platformName", "Android");
       caps.setCapability("app", appId);
-      caps.setCapability("browserstack.debug", true);
-      caps.setCapability("browserstack.video", true);
+      caps.setCapability("automationName", "UIAutomator2");
 
+      final var bstackOpts = new HashMap<>();
+      bstackOpts.put("deviceName", "Google Pixel 7");
+      bstackOpts.put("osVersion", "13.0");
+      bstackOpts.put("projectName", "PalaceIntegrationTests");
+      bstackOpts.put("buildName", "Build XYZ");
+      bstackOpts.put("sessionName", "My test run");
+      bstackOpts.put("appiumVersion", "2.19.0");
+      bstackOpts.put("debug", true);
+      bstackOpts.put("video", true);
+
+      caps.setCapability("bstack:options", bstackOpts);
       driver = new AndroidDriver(new URL("https://hub.browserstack.com/wd/hub"), caps);
       LOG.debug("Opened Android driver.");
       resources.add(driver::quit);
