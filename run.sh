@@ -19,6 +19,13 @@ run_cleanup()
 info "Setting up ADB"
 ./adb-run.sh
 
+if [ ! -f "app.apk" ]
+then
+  info "app.apk exists"
+else
+  fatal "app.apk does not exist!"
+fi
+
 info "Starting Appium"
 ./appium-run.sh &
 
