@@ -35,7 +35,7 @@ public final class AppiumTestContext implements AutoCloseable
     throws Exception
   {
     return create(
-      AppiumTestContext.createTestName(testInfo, device),
+      AppiumTestContext.createTestName(testInfo),
       device
     );
   }
@@ -137,8 +137,7 @@ public final class AppiumTestContext implements AutoCloseable
   }
 
   private static String createTestName(
-    final TestInfo testInfo,
-    final AppiumDeviceConfiguration device)
+    final TestInfo testInfo)
   {
     final var text = new StringBuilder();
 
@@ -152,12 +151,6 @@ public final class AppiumTestContext implements AutoCloseable
         text.append(method.getName());
         text.append(' ');
       });
-
-    text.append('(');
-    text.append(device.deviceName());
-    text.append(" ");
-    text.append(device.osVersion());
-    text.append(')');
     return text.toString();
   }
 
