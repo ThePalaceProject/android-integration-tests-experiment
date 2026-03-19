@@ -2,6 +2,7 @@ package org.thepalaceproject.ait;
 
 import com.io7m.jmulticlose.core.CloseableCollection;
 import com.io7m.jmulticlose.core.CloseableCollectionType;
+import com.titusfortner.logging.SeleniumLogger;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import org.junit.jupiter.api.TestInfo;
@@ -47,6 +48,13 @@ public final class AppiumTestContext implements AutoCloseable
   {
     LOG.debug("Setting up Appium context...");
 
+    /*
+     * Enable copious debug logging.
+     * See: https://github.com/titusfortner/selenium-logger
+     */
+
+    SeleniumLogger.enable();
+
     final var browserstackAppId =
       System.getenv("PALACE_BROWSERSTACK_APP_URL");
     if (browserstackAppId != null) {
@@ -67,7 +75,7 @@ public final class AppiumTestContext implements AutoCloseable
     final AndroidDriver driver;
 
     try {
-      LOG.debug("Opening Android driver...");
+      LOG.debug("Opening Browserstack Android driver...");
 
       final var username =
         System.getenv("PALACE_BROWSERSTACK_USERNAME");
@@ -99,6 +107,7 @@ public final class AppiumTestContext implements AutoCloseable
       LOG.debug("Opened Android driver.");
       resources.add(driver::quit);
     } catch (final Throwable e) {
+      LOG.error("Failed to open driver: ", e);
       resources.close();
       throw e;
     }
@@ -117,7 +126,7 @@ public final class AppiumTestContext implements AutoCloseable
     final AndroidDriver driver;
 
     try {
-      LOG.debug("Opening Android driver...");
+      LOG.debug("Opening local Android driver...");
 
       final var opts =
         new UiAutomator2Options()
@@ -128,6 +137,7 @@ public final class AppiumTestContext implements AutoCloseable
       LOG.debug("Opened Android driver.");
       resources.add(driver::quit);
     } catch (final Throwable e) {
+      LOG.error("Failed to open driver: ", e);
       resources.close();
       throw e;
     }

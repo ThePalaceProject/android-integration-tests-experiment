@@ -111,6 +111,11 @@
       <artifactId>slf4j-api</artifactId>
       <version>2.0.17</version>
     </dependency>
+    <dependency>
+      <groupId>com.titusfortner</groupId>
+      <artifactId>selenium-logger</artifactId>
+      <version>2.3.0</version>
+    </dependency>
 
     <dependency>
       <groupId>com.browserstack</groupId>

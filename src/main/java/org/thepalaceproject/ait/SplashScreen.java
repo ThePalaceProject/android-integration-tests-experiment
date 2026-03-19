@@ -26,7 +26,6 @@ public final class SplashScreen
     final AppiumTestContext context)
   {
     waitForAndCompleteNotificationsScreen(context);
-    waitForAndCompleteTutorialScreen(context);
     waitForAndCompleteLibrarySelection(context);
     waitForCatalog(context);
   }
@@ -81,33 +80,6 @@ public final class SplashScreen
         .get(0);
 
     firstItem.click();
-  }
-
-  public static void waitForAndCompleteTutorialScreen(
-    final AppiumTestContext context)
-  {
-    LOG.debug("Waiting for the tutorial screen...");
-
-    final var driver = context.driver();
-
-    /*
-     * Wait until the splash screen "skip" control becomes available.
-     */
-
-    final var wait =
-      new WebDriverWait(driver, Duration.ofSeconds(30L));
-    final var locator =
-      By.id("tutorialSkipTouch");
-
-    wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-    LOG.debug("Tutorial screen has arrived.");
-
-    /*
-     * Press the "skip" control.
-     */
-
-    driver.findElement(locator).click();
-    LOG.debug("Completed tutorial screen.");
   }
 
   public static void waitForAndCompleteNotificationsScreen(
