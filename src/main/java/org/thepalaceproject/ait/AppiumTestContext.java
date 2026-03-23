@@ -101,6 +101,17 @@ public final class AppiumTestContext implements AutoCloseable
       caps.setCapability("platformName", "Android");
       caps.setCapability("bstack:options", browserstackOptions);
 
+      /*
+       * Pass an extra option to the app: The app code checks for an
+       * AutomatedTesting value on startup and configures itself to use
+       * the special test library rather than Palace Bookshelf.
+       */
+
+      caps.setCapability(
+        "appium:optionalIntentArguments",
+        "--ez AutomatedTesting true"
+      );
+
       driver = new AndroidDriver(
         new URL("https://hub.browserstack.com/wd/hub"),
         caps);
@@ -128,9 +139,16 @@ public final class AppiumTestContext implements AutoCloseable
     try {
       LOG.debug("Opening local Android driver...");
 
+      /*
+       * Pass an extra option to the app: The app code checks for an
+       * AutomatedTesting value on startup and configures itself to use
+       * the special test library rather than Palace Bookshelf.
+       */
+
       final var opts =
         new UiAutomator2Options()
           .setPlatformName("Android")
+          .setOptionalIntentArguments("--ez AutomatedTesting true")
           .setApp("/app.apk");
 
       driver = new AndroidDriver(new URL("http://127.0.0.1:4723/"), opts);
