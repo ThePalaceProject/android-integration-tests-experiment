@@ -21,23 +21,40 @@ public final class AppiumDeviceConfigurations
 
   public static Stream<AppiumDeviceConfiguration> deviceConfigurations()
   {
-    return Stream.of(
-      new AppiumDeviceConfiguration(
-        "Samsung Galaxy S23",
-        "13.0"
-      ),
-      new AppiumDeviceConfiguration(
-        "Google Pixel 9",
-        "16.0"
-      ),
-      new AppiumDeviceConfiguration(
-        "Motorola Moto G9 Play",
-        "10.0"
-      ),
-      new AppiumDeviceConfiguration(
-        "Samsung Galaxy Tab S11",
-        "16.0"
-      )
-    );
+    if (inBrowserStack()) {
+      return Stream.of(
+        new AppiumDeviceConfiguration(
+          "Samsung Galaxy S23",
+          "13.0"
+        ),
+        new AppiumDeviceConfiguration(
+          "Google Pixel 9",
+          "16.0"
+        ),
+        new AppiumDeviceConfiguration(
+          "Motorola Moto G9 Play",
+          "10.0"
+        ),
+        new AppiumDeviceConfiguration(
+          "Samsung Galaxy Tab S11",
+          "16.0"
+        )
+      );
+    } else {
+      return Stream.of(
+        new AppiumDeviceConfiguration(
+          "ADB",
+          "16.0"
+        )
+      );
+    }
+  }
+
+  private static boolean inBrowserStack()
+  {
+    final var browserstackAppId =
+      System.getenv("PALACE_BROWSERSTACK_APP_URL");
+
+    return (browserstackAppId != null);
   }
 }
